@@ -6,12 +6,11 @@
     callback: onreadystatechange
 
  */
-var processedImage = require('processedImage');
+var processedImage = require('./processedImage');
 
 var makeXmlHttp = function(post, callback){
     var xmlHttp = new XMLHttpRequest();
     var post = JSON.stringify(post);
-    //TODO make variable 'post' into a variable that can be sent to the server. i.e. post = 'imageData='post;
     xmlHttp.onreadystatechange = function(){
         var image = processedImage(xmlHttp);
         if(image){
@@ -19,8 +18,8 @@ var makeXmlHttp = function(post, callback){
         }
     };
 
-    xmlHttp.open("POST", "processImage.js", true);
-    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlHttp.open("POST", "http://localhost:3000", true);
+    xmlHttp.setRequestHeader("Content-Type", "application/json");
     xmlHttp.send(post);
 };
 

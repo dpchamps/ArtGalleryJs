@@ -21,20 +21,25 @@
 var processedImage = function(xmlHttp){
     if(xmlHttp.readyState === 4 && xmlHttp.status === 200){
         //the request is done, and we have a status of OK
+
         var response = JSON.parse(xmlHttp.response);
+        console.log(response);
         xmlHttp = null; // is this necessary?
 
         //return the object
         return response;
     }else{
-        /*
-        some basic error handling to keep me sane
-         */
-        if(xmlHttp.status >= 400 && xmlHttp.status < 500){
-            console.error("Client Error. Read: HTTP Status: "+xmlHttp.status);
-        }else if(xmlHttp.status >= 500 && xmlHttp < 600){
-            console.error("Server Error. Read: HTTP Status: "+xmlHttp.status);
+        if(xmlHttp.readyState > 1){
+            /*
+             some basic error handling to keep me sane
+             */
+            if(xmlHttp.status >= 400 && xmlHttp.status < 500){
+                console.error("On readyState: "+xmlHttp.readyState+" Client Error. Read: HTTP Status: "+xmlHttp.status);
+            }else if(xmlHttp.status >= 500 && xmlHttp < 600){
+                console.error("On readyState: "+xmlHttp.readyState+" Server Error. Read: HTTP Status: "+xmlHttp.status);
+            }
         }
+
 
         //error
         return false;

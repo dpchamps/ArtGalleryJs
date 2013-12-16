@@ -2,7 +2,7 @@ var express = require('express');
 var fs = require('fs');
 var app = express();
 
-app.use(express.bodyParser({limit: '50mb'}));
+app.use(express.bodyParser({limit: '15mb'}));
 // Add headers
 app.use(function (req, res, next) {
 
@@ -24,15 +24,18 @@ app.use(function (req, res, next) {
 });
 
 app.post('/', function(req, res){
-    //console.log('POST /');
-    console.log("image number: "+req.body.imageNumber);
-    //console.dir(req.body);
-    //res.writeHead(200, {'Content-Type': 'application/json'});
-
-    var test = {
-        hello: "world"
+    var imageData = {
+        imagePath: "",
+        thumbPath: "",
+        imageNumber: req.body.imageNumber,
+        raw: decodeURIComponent(req.body.URI)
     };
-    res.send(JSON.stringify(test));
+    /*
+    fs.writeFile('test.png',imageData.raw, 'base64', function(err){
+        console.log(err);
+    })
+    */
+    res.send(JSON.stringify(imageData));
 });
 
 port = 3000;

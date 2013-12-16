@@ -18,11 +18,9 @@
     fileData - the file that was just encoded, to be sent to the server.
     callback - what exactly you want to do with the data that comes back from the server
  */
-var xmlHttp = require('xmlhttprequest');
+var xmlHttp = require('./xmlhttprequest');
 
-var loadImages = function(e) {
-    //array of all files
-    var fileArray = e.target.files;
+var loadImages = function(fileArray) {
 
     for(var i = 0, image; image = fileArray[i]; i++){
         //verify image
