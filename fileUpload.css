@@ -17,9 +17,19 @@ html, body {
 }
 
 #imageDock{
+    position:relative;
     background-color: rgba(68, 119, 255, 0.4);
     border: 17px dashed;
     width: 100%;
     height: 100%;
     box-sizing: border-box;
+}
+#imageDock:after{
+    position: absolute;
+    content: "";
+    top:50%;
+    left:50%;
+    width:43px;
+    height: 11px;
+    background-image: url('asyncLoad.gif');
 }

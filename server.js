@@ -1,8 +1,12 @@
 var express = require('express');
 var fs = require('fs');
+var gm = require('gm');
+var processImage = require('./server/processImage');
+var createThumb = require('./server/createThumb');
 var app = express();
 
-app.use(express.bodyParser({limit: '15mb'}));
+
+app.use(express.bodyParser({limit: '10mb'}));
 // Add headers
 app.use(function (req, res, next) {
 
@@ -25,16 +29,14 @@ app.use(function (req, res, next) {
 
 app.post('/', function(req, res){
     var imageData = {
-        imagePath: "",
-        thumbPath: "",
+        imagePath: "img/",
+        thumbPath: "img/thumb/",
         imageNumber: req.body.imageNumber,
         raw: decodeURIComponent(req.body.URI)
     };
-    /*
-    fs.writeFile('test.png',imageData.raw, 'base64', function(err){
-        console.log(err);
-    })
-    */
+    imageData.buffer = new Buffer(imageData.raw, 'base64');
+
+    imageData = processImage(imageData);
     res.send(JSON.stringify(imageData));
 });
 
