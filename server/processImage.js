@@ -10,7 +10,7 @@ return thumb and image path
 var gm = require('gm');
 var randomString = require('./randomString');
 var createThumb = require('./createThumb');
-var processImage = function(imageData){
+var processImage = function(imageData, callback){
     var MAX_DIMENSION = {
             width: 1600,
             height: 1200
@@ -39,7 +39,7 @@ var processImage = function(imageData){
                 .write(imageData.imagePath, function(err){
                     if(!err){
                         //file saved, create temp thumbnail
-                        createThumb(imageData);
+                        createThumb(imageData, callback);
                     }else{
                         console.log(imageData.imageNumber +"\t"+ err);
                     }

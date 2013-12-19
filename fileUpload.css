@@ -21,15 +21,24 @@ html, body {
     background-color: rgba(68, 119, 255, 0.4);
     border: 17px dashed;
     width: 100%;
-    height: 100%;
+    min-height: 100%;
     box-sizing: border-box;
 }
-#imageDock:after{
-    position: absolute;
-    content: "";
+#imageDock p{
+    position: fixed;
     top:50%;
     left:50%;
-    width:43px;
-    height: 11px;
-    background-image: url('asyncLoad.gif');
+    margin-left: -25%;
+    margin-top: -30px;
+    font-size: 30px;
+    letter-spacing: 2px;
+    font-family: Tahoma;
+    z-index: -1;
+}
+#imageDock div {
+    display: inline-block;
+}
+
+#imageDock div img{
+    padding:5px;
 }

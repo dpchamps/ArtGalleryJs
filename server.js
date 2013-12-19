@@ -36,8 +36,15 @@ app.post('/', function(req, res){
     };
     imageData.buffer = new Buffer(imageData.raw, 'base64');
 
-    imageData = processImage(imageData);
-    res.send(JSON.stringify(imageData));
+    imageData = processImage(imageData, function(){
+        delete imageData.raw;
+        delete imageData.buffer;
+        res.send(JSON.stringify(imageData));
+    });
+
+    //trim the object down, so we're not sending the big raw bytes and buffer back...
+
+
 });
 
 port = 3000;

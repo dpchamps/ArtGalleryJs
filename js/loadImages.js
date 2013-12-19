@@ -1,6 +1,6 @@
 /**
  * Created by Dave on 12/14/13.
-    uses HTML5 api, supports multiple files\
+    uses HTML5 api, supports multiple files.
 
  This provides some logic for a user to load Images onto the page.
 
@@ -20,20 +20,26 @@
  */
 var xmlHttp = require('./xmlhttprequest');
 
-var loadImages = function(fileArray) {
-
+var loadImages = function(fileArray, imageModule) {
+    imageModule.setFileArrayLength(fileArray.length);
+    //get an offset, if there are already images on the page
+    var offset = imageModule.getLength() - fileArray.length;
     for(var i = 0, image; image = fileArray[i]; i++){
         //verify image
         if(!image.type.match(/^image\/[bmp|jpg|jpeg|png|gif]/)){
+            imageModule.decreaseFileArrayLength();
             continue;
         }
+
         //create a new FileReader object
         var readFile = new FileReader();
         var data = {
-            imageNumber: i,
-            mimeType: image.type
+            imageNumber: i+offset,
+            mimeType: image.type,
+            thumbPath: "asyncLoad.gif"
         };
-        readFile.onload = (function(fileData){
+        imageModule.add(data);
+        readFile.onload = (function(fileData, imageModule){
             return function(loadedImage){
                 fileData.URI = encodeURIComponent( loadedImage.target.result.split(',')[1] );
 
@@ -48,9 +54,10 @@ var loadImages = function(fileArray) {
                      parameter: processedImage.
                         -See processedImage for more info.
                      */
+                    imageModule.add(processedImage);
                 });
             }
-        })(data);
+        })(data, imageModule);
 
         readFile.readAsDataURL(image);
     }

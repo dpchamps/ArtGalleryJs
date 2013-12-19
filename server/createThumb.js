@@ -3,7 +3,7 @@
  */
 var gm = require('gm');
 
-var createThumb = function(imageData){
+var createThumb = function(imageData, callback){
     var MAXTHUMB = {
         width: 350,
         height: 350
@@ -14,6 +14,7 @@ var createThumb = function(imageData){
         .write(imageData.thumbPath, function(err){
             if(!err){
                 //thumbnail saved
+                callback();
             }else{
                 console.log(err);
             }

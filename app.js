@@ -2,9 +2,10 @@
  * Created by Dave on 12/15/13.
  */
 (function($){
-    var dragAndDrop = require('./js/dragAndDrop');
+
 
     $(function(){
+        var dragAndDrop = require('./js/dragAndDrop')($);
         //the place where the user can drop some files is the entire webpage
         var imageArea = document.getElementById("imageDock");
 
