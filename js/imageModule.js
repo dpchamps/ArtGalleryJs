@@ -43,7 +43,7 @@ var imageModule = function($){
     var insertImageIntoDOM = function(imageData){
         var selector = "#image_"+imageData.imageNumber;
         var node = $(selector);
-        console.log(node);
+
         if(node.length === 0){
             //it doesn't exist
             var newDiv = $('<div>',{
@@ -62,14 +62,29 @@ var imageModule = function($){
             });
         }
     };
+    var removeImageFromDOM = function(imageData){
+        var selector = '#image_'+imageData.imageNumber;
+        var node = $(selector);
 
+        if(node.length === 0){
+            //nothing to delete
+            throw new Error("No image to delete. Non fatal");
+        }else{
+            node.remove();
+        }
+    }
     var _add = function(imageData){
         var idx = imageData.imageNumber;
         items[idx] = imageData;
 
         insertImageIntoDOM(items[idx]);
     };
+    var _remove = function(imageData){
+        var idx = imageData.imageNumber;
 
+        removeImageFromDOM(items[idx]);
+        delete items[idx];
+    };
 
 
     var _getImageURL = function(idx){
@@ -83,6 +98,9 @@ var imageModule = function($){
     return {
         add : function(imageData){
             _add(imageData);
+        },
+        remove: function(imageData){
+            _remove(imageData);
         },
         loadComplete : function(){
             _loadComplete();
