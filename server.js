@@ -2,7 +2,7 @@ var express = require('express');
 var fs = require('fs');
 var gm = require('gm');
 var processImage = require('./server/processImage');
-var createThumb = require('./server/createThumb');
+var Promise = require('es6-promise').Promise;
 var app = express();
 
 
@@ -36,15 +36,17 @@ app.post('/', function(req, res){
     };
     imageData.buffer = new Buffer(imageData.raw, 'base64');
 
-    imageData = processImage(imageData, function(){
+    //processImage returns a Promise. Let's deal with that promise
+    processImage(imageData).then(function(imageData){
+        //success,
+        //trim imageData down so we're not slinging needless data around
         delete imageData.raw;
-        delete imageData.buffer;
+        delete imageData.bffer;
         res.send(JSON.stringify(imageData));
+    }).catch(function(err){
+        //uh oh, send the error back to the client
+        res.send(err);
     });
-
-    //trim the object down, so we're not sending the big raw bytes and buffer back...
-
-
 });
 
 port = 3000;

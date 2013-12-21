@@ -2,52 +2,51 @@
  * Created by Dave on 12/17/13.
  */
 /*
-resize image
-save big image
-return thumb and image path
+processImage module
+
+returns a Promise object with either an Error of an imageData Object as a value
+
+tasks:
+    -sets imageData.imagePath/imageData.thumbPath with a file name in the format:
+        ISO-String-Date-four-random-chars.fileType
+    -returns a chained Promise object
+        - when makeImage resolves, call and return createThumb
+        - when createThumb resolves, return imageData
+        - iff either fail, return an error
  */
 
-var gm = require('gm');
-var randomString = require('./randomString');
-var createThumb = require('./createThumb');
-var processImage = function(imageData, callback){
-    var MAX_DIMENSION = {
-            width: 1600,
-            height: 1200
-        },
-        IMG_DIMENSION = {},
-        date = new Date(),
-        fileName = date.toISOString().split("T")[0]+"-"+randomString(4)+".png";
 
+var Promise = require('es6-promise').Promise;
+var makeImage = require('./makeImage');
+var createThumb = require('./createThumb');
+var randomString = require('./randomString');
+
+var processImage = function(imageData){
+
+    //create a filename in the format: ISO-String-Date-four-random-chars.fileType
+    date = new Date();
+    var fileName = date.toISOString().split("T")[0]+"-"+randomString(4)+".png";
+
+    //set the image and thumb path, now that we know the filename
     imageData.imagePath = imageData.imagePath+fileName;
     imageData.thumbPath = imageData.thumbPath+fileName;
 
-    gm(imageData.buffer)
+    return makeImage(imageData).then(function(imageData){
+        //image has been saved. all logic that happens after image has been created goes here
+        return createThumb(imageData);
+    }).catch(function(err){
+        //there was a problem with writing the image to the disk
+        console.error(err);
+        return err;
+    }).then(function(imageData){
+        //the thumbnail has been saved, process image is complete
+        return imageData;
+    }).catch(function(err){
+       //there was a problem making the thumbnail
+       console.error(err);
+       return err;
+    });
 
-        .size(function(err, dimensions){
-            IMG_DIMENSION.width = dimensions.width;
-            IMG_DIMENSION.height = dimensions.height;
-
-            if(IMG_DIMENSION.width > MAX_DIMENSION.width){
-                IMG_DIMENSION.width = MAX_DIMENSION.width;
-            }
-            if(IMG_DIMENSION.height > MAX_DIMENSION.height){
-                IMG_DIMENSION.height = MAX_DIMENSION.height;
-            }
-            gm(imageData.buffer)
-                .resize(IMG_DIMENSION.width, IMG_DIMENSION.height)
-                .write(imageData.imagePath, function(err){
-                    if(!err){
-                        //file saved, create temp thumbnail
-                        createThumb(imageData, callback);
-                    }else{
-                        console.log(imageData.imageNumber +"\t"+ err);
-                    }
-                });
-        })
-
-
-    return imageData;
 };
 
 module.exports = processImage;
